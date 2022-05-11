@@ -1044,6 +1044,7 @@ let scene4 = {
     this.load.image("restart", "assets/sprites/restart.png");
     // load menu button
     this.load.image("menu", "assets/sprites/menu.png");
+    this.load.image("babyHeart", "assets/sprites/baby.png");
     this.load.audio("enterSound", "assets/sounds/enter.wav");
     this.load.image("clouds", "assets/images/clouds.png");
   }
@@ -1070,13 +1071,21 @@ let scene4 = {
       .image(550, 500, "menu")
       .setInteractive({ useHandCursor: true });
     const creditsButton = this.add
-      .image(500, 500, "other")
+      .image(377, 500, "babyHeart")
       .setInteractive({ useHandCursor: true });
     creditsButton.on("pointerup", scene3Transition, this);
     menuButton.on("pointerup", backToMenu, this);
     menuButton.on("pointerup", enterSoundNow, this);
   
     menuText = this.add.text(487, 400, "Back to menu", {
+      fontFamily: "Balsamiq Sans",
+  
+      color: "#a579d4",
+      fontSize: "20px",
+    });
+
+    var key_stroke = String.fromCodePoint(0x2764) 	;
+    creditsButtonText = this.add.text(330, 400, "Credits " + key_stroke, {
       fontFamily: "Balsamiq Sans",
   
       color: "#a579d4",
@@ -1114,7 +1123,7 @@ let scene4 = {
   function scene4Preload() {
   
     this.load.audio("enterSound", "assets/sounds/enter.wav");
-    // load menu button
+    // load baby heart button
     this.load.image("menu", "assets/sprites/menu.png");
 
   }
@@ -1123,12 +1132,12 @@ let scene4 = {
  
     this.scale.fullscreenTarget = document.getElementById("app");
     enterSound = this.sound.add("enterSound", { loop: false });
-    const menuButton = this.add
+    const creditsButton = this.add
       .image(550, 500, "menu")
       .setInteractive({ useHandCursor: true });
 
-    menuButton.on("pointerup", backToMenu, this);
-    menuButton.on("pointerup", enterSoundNow, this);
+    creditsButton.on("pointerup", backToMenu, this);
+    creditsButton.on("pointerup", enterSoundNow, this);
    // credits to: https://phaser.discourse.group/t/auto-scrolling-text-issue-phaser-3/2984
    creditText = `Credits:\n1) credits to Professor\n2) credits for assets/images/meadow.jpg: https://opengameart.org/content/meadow-background\n3) credits for assets/sounds/cute.mp3 to migfus20: https://opengameart.org/content/cute-intro-music\n4) credits for assets/sounds/thatsItFortoday.mp3 - unable to find for now\n5) credits for assets/sprites/rabbitBig.png: https://opengameart.org/content/mascot-bunny-character\n6) credits for assets/sprites/carrot1.png: https://opengameart.org/content/mascot-bunny-character\n7) credits for assets/sprites/platform.png: https://opengameart.org/content/dark-ground\n8) credits for assets/sounds/: https://opengameart.org/content/7-eating-crunches\n9) credits to StumpyStrust for ui sounds (on/off): https://opengameart.org/content/ui-sounds\n10) credits to p0ss for Interface Sounds Starter Pack (appear-online.ogg): https://opengameart.org/content/interface-sounds-starter-pack\n11) credits to wobbleboxx for assets/sounds/wrong.mp3 and ../.../levelUp.mp3: https://opengameart.org/content/level-up-power-up-coin-get-13-sounds\n12) credits to jalastram - Jesús Lastra - for assets/sounds/enter.wav: https://opengameart.org/content/gui-sound-effects-4\n13) credits to full screen: https://raw.githubusercontent.com/photonstorm/phaser3-examples/master/public/assets/ui/fullscreen-white.png\n14) credits to assets/sounds/clock.wav: https://opengameart.org/content/ticking-clock-0\m15) credits to assets/sounds/completeTask.mp3: https://opengameart.org/content/completion-sound\n16) credits to By Zeyu Ren 任泽宇 for assets/images/clouds.png: https://opengameart.org/content/backgrounds-for-2d-platformers`
    
