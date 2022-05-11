@@ -1083,6 +1083,7 @@ let scene4 = {
       color: "#a579d4",
       fontSize: "20px",
     });
+    // credits: https://stackoverflow.com/questions/42679712/why-does-the-red-heart-emoji-require-two-code-points-but-the-other-colored-hear/42680595
 
     var key_stroke = String.fromCodePoint(0x2764) 	;
     creditsButtonText = this.add.text(330, 400, "Credits " + key_stroke, {
