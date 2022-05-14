@@ -69,6 +69,13 @@ let scene4 = {
     create: scene4Create,
     update: scene4Update,
   };
+let scene4 = {
+    key: "scene5",
+    active: false,
+    preload: scene5Preload,
+    create: scene5Create,
+    update: scene5Update,
+  };
   // set up configuration for the game
   var config = {
     type: Phaser.CANVAS,
@@ -92,7 +99,7 @@ let scene4 = {
         debug: false,
       },
     },
-    scene: [scene1, scene2, scene3, scene4],
+    scene: [scene1, scene2, scene3, scene4, scene5],
   };
   
   // variables for scene 1
@@ -375,6 +382,7 @@ let scene4 = {
     this.load.image("meadow", "assets/images/meadow.jpg");
     this.load.image("ground", "assets/sprites/platform.png");
     this.load.image("carrot", "assets/sprites/carrot1.png");
+    this.load.audio("pop", "assets/sounds/pop.ogg");
   }
   // scene 2 create
   function scene2Create() {
@@ -544,7 +552,8 @@ let scene4 = {
       };
   
     })*/
-  
+
+    pop = this.sound.add("pop");
     carrots = this.physics.add.group({
       key: "carrot",
       repeat: 7,
@@ -793,13 +802,15 @@ let scene4 = {
             totalCounterWPM = counterWPM;
           }
         } else if (score < 100) {
-          wrong.play();
+         wrong.play();
           counterWPM--;
           // credits to: https://phaser.discourse.group/t/delete-an-item-in-a-group/7613/2
           lifeHearts.remove(lifeHearts.getLast(true), true);
+          pop.play();
           grow -= 0.1;
           rabbitBig.setScale(grow);
           lifeHeartsLeft -= 1;
+          
           if (lifeHeartsLeft <= 0) {
             meadowThoughts.stop();
             game.scene.stop("scene2");
@@ -811,6 +822,7 @@ let scene4 = {
           wrong.play();
           counterWPM--;
           lifeHeartsLeft -= 1;
+          
           if (lifeHeartsLeft <= 0) {
             meadowThoughts.stop();
             game.scene.stop("scene2");
@@ -821,6 +833,7 @@ let scene4 = {
   
           // credits to: https://phaser.discourse.group/t/delete-an-item-in-a-group/7613/2
           lifeHearts.remove(lifeHearts.getLast(true), true);
+          pop.play();
           grow -= 0.1;
           rabbitBig.setScale(grow);
         }
@@ -1041,10 +1054,10 @@ let scene4 = {
   // scene 3 Preload
   function scene3Preload() {
     // load restart button
-    this.load.image("restart", "assets/sprites/restart.png");
+    this.load.image("restart", "assets/sprites/purple-restart.png");
     // load menu button
-    this.load.image("menu", "assets/sprites/menu.png");
-    this.load.image("babyHeart", "assets/sprites/baby.png");
+    this.load.image("menu", "assets/sprites/purple-menu.png");
+    this.load.image("babyHeart", "assets/sprites/purple-heart.png");
     this.load.audio("enterSound", "assets/sounds/enter.wav");
     this.load.image("clouds", "assets/images/clouds.png");
   }
@@ -1125,32 +1138,42 @@ let scene4 = {
   
     this.load.audio("enterSound", "assets/sounds/enter.wav");
     // load baby heart button
-    this.load.image("menu", "assets/sprites/menu.png");
+    this.load.image("white-menu", "assets/sprites/white-menu.png");
+    this.load.image("bg-none", "assets/images/bg-none.png")
 
   }
 // scene 4 Create
   function scene4Create() {
- 
+    this.add.image(0, 0, "bg-none").setOrigin(0, 0);
     this.scale.fullscreenTarget = document.getElementById("app");
     enterSound = this.sound.add("enterSound", { loop: false });
+    creditsTextMenu = this.add.text(657, 430, "Back to menu", {
+      fontFamily: "Balsamiq Sans",
+  
+      color: "#fff",
+      fontSize: "17px",
+    });
     const creditsButton = this.add
-      .image(550, 500, "menu")
+      .image(700, 500, "menu")
       .setInteractive({ useHandCursor: true });
 
     creditsButton.on("pointerup", backToMenu, this);
     creditsButton.on("pointerup", enterSoundNow, this);
    // credits to: https://phaser.discourse.group/t/auto-scrolling-text-issue-phaser-3/2984
-   creditText = `Credits:\n1) credits to Professor\n2) credits for assets/images/meadow.jpg: https://opengameart.org/content/meadow-background\n3) credits for assets/sounds/cute.mp3 to migfus20: https://opengameart.org/content/cute-intro-music\n4) credits for assets/sounds/thatsItFortoday.mp3 - unable to find for now\n5) credits for assets/sprites/rabbitBig.png: https://opengameart.org/content/mascot-bunny-character\n6) credits for assets/sprites/carrot1.png: https://opengameart.org/content/mascot-bunny-character\n7) credits for assets/sprites/platform.png: https://opengameart.org/content/dark-ground\n8) credits for assets/sounds/: https://opengameart.org/content/7-eating-crunches\n9) credits to StumpyStrust for ui sounds (on/off): https://opengameart.org/content/ui-sounds\n10) credits to p0ss for Interface Sounds Starter Pack (appear-online.ogg): https://opengameart.org/content/interface-sounds-starter-pack\n11) credits to wobbleboxx for assets/sounds/wrong.mp3 and ../.../levelUp.mp3: https://opengameart.org/content/level-up-power-up-coin-get-13-sounds\n12) credits to jalastram - Jesús Lastra - for assets/sounds/enter.wav: https://opengameart.org/content/gui-sound-effects-4\n13) credits to full screen: https://raw.githubusercontent.com/photonstorm/phaser3-examples/master/public/assets/ui/fullscreen-white.png\n14) credits to assets/sounds/clock.wav: https://opengameart.org/content/ticking-clock-0\m15) credits to assets/sounds/completeTask.mp3: https://opengameart.org/content/completion-sound\n16) credits to By Zeyu Ren 任泽宇 for assets/images/clouds.png: https://opengameart.org/content/backgrounds-for-2d-platformers`
+   creditText = `Credits:\n1) credits to Professor\n2) credits for meadow.jpg: https://opengameart.org/content/meadow-background\n3) credits to migfus20: https://opengameart.org/content/cute-intro-music\n4) credits for thatsItFortoday.mp3 - unable to find for now\n5) credits to: https://opengameart.org/content/mascot-bunny-character\n6) credits to: https://opengameart.org/content/mascot-bunny-character\n7) credits to: https://opengameart.org/content/dark-ground\n8) credits for: https://opengameart.org/content/7-eating-crunches\n9) credits to StumpyStrust for ui sounds (on/off): https://opengameart.org/content/ui-sounds\n10) credits to p0ss for Interface Sounds Starter Pack (appear-online.ogg): https://opengameart.org/content/interface-sounds-starter-pack\n11) credits to wobbleboxx for wrong.mp3 and levelUp.mp3: https://opengameart.org/content/level-up-power-up-coin-get-13-sounds\n12) credits to jalastram - Jesús Lastra - for enter.wav: https://opengameart.org/content/gui-sound-effects-4\n13) credits to full screen: https://raw.githubusercontent.com/photonstorm/phaser3-examples/master/public/assets/ui/fullscreen-white.png\n14) credits to clock.wav: https://opengameart.org/content/ticking-clock-0\n15) credits to completeTask.mp3: https://opengameart.org/content/completion-sound\n16) By Zeyu Ren 任泽宇 for clouds.png: https://opengameart.org/content/backgrounds-for-2d-platformers`
    
     let arrayText = creditText.split('\n')
     let text = this.add.text(0, 0, '', {
       fontFamily: "Balsamiq Sans",
   
-      color: "#a579d4",
-      fontSize: "17px",
+      color: "#fff",
+      fontSize: "14px",
       align: 'left',
-      padding: 10,
-      lineSpacing: 20
+      padding: 50,
+      lineSpacing: 7,
+
+      // credits :https://github.com/photonstorm/phaser3-examples/blob/e5ec94a68a9393082d797645d0e830e2f6112bf1/public/src/3.24/game%20objects/text/word%20wrap%20by%20width.js
+       wordWrap: { width: 477 }
     })
 
     for (let i = 0; i < arrayText.length - 1; i++) {
