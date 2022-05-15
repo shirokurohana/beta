@@ -122,6 +122,7 @@ let scene5 = {
     // load audio asset files use this.load.audio()
     this.load.audio("music", "assets/sounds/cute.mp3");
     // load help button
+    
     this.load.image("help", "assets/sprites/exclude.png");
     // load info button
     this.load.image("info", "assets/sprites/info.png");
@@ -138,6 +139,8 @@ let scene5 = {
     this.load.audio("on", "assets/sounds/on.ogg");
     this.load.audio("off", "assets/sounds/off.ogg");
     this.load.audio("enterSound", "assets/sounds/enter.wav");
+    // extra
+    this.load.audio("meadowThoughts", "assets/sounds/thatsItForToday.mp3");
   }
   
   // scene 1 create
@@ -176,6 +179,8 @@ let scene5 = {
     const startButton = this.add
       .rectangle(400, 500, 177, 77, 0x000)
       .setInteractive({ useHandCursor: true });
+
+    meadowThoughts = this.sound.add("meadowThoughts")
   
     startButton.setInteractive({ useHandCursor: true });
     startButton.on("pointerover", function () {
@@ -198,6 +203,8 @@ let scene5 = {
         fontSize: "20px",
       })
       .setOrigin(0.5);
+
+    
   
     this.input.setDefaultCursor("url(assets/cursors/cursor2.png), pointer");
     this.input.setDefaultCursor("url(assets/images/cursor1.png), default");
