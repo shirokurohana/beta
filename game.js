@@ -398,7 +398,27 @@ let scene5 = {
     sound1.stop();
     startTime = performance.now();
 
-    
+    // credits to :https://labs.phaser.io/edit.html?src=src/scalemanager/full%20screen%20game.js&v=3.55.2
+    var button = this.add
+      .image(800 - 16, 16, "fullscreen", 0)
+      .setOrigin(1, 0)
+      .setInteractive();
+  
+    button.on(
+      "pointerup",
+      function () {
+        if (this.scale.isFullscreen) {
+          button.setFrame(0);
+  
+          this.scale.stopFullscreen();
+        } else {
+          button.setFrame(1);
+  
+          this.scale.startFullscreen();
+        }
+      },
+      this
+    );
     // credits to jjcapellan: https://phaser.discourse.group/t/countdown-timer/2471/4
     //console.log("create timer");
     // 1:30 minute in seconds
@@ -443,27 +463,7 @@ let scene5 = {
   
     soundOffButton2.on("pointerup", mutesound, this);
   
-    /* credits to :https://labs.phaser.io/edit.html?src=src/scalemanager/full%20screen%20game.js&v=3.55.2
-    var button = this.add
-      .image(800 - 16, 16, "fullscreen", 0)
-      .setOrigin(1, 0)
-      .setInteractive();
-  
-    button.on(
-      "pointerup",
-      function () {
-        if (this.scale.isFullscreen) {
-          button.setFrame(0);
-  
-          this.scale.stopFullscreen();
-        } else {
-          button.setFrame(1);
-  
-          this.scale.startFullscreen();
-        }
-      },
-      this
-    );*/
+   
   
     // credits to :https://phaser.discourse.group/t/delete-an-item-in-a-group/7613/2
     const lifeHearts = this.add.group({
