@@ -95,7 +95,7 @@ let scene5 = {
       default: "arcade",
       arcade: {
         fps: 120,
-        gravity: { y: 300 },
+       gravity: { y: 300 },
         debug: false,
       },
     },
@@ -387,7 +387,7 @@ let scene5 = {
     this.load.audio("wrong", "assets/sounds/wrong.mp3");
     this.load.audio("crunch", "assets/sounds/crunch.3.ogg");
     this.load.image("meadow", "assets/images/meadow.jpg");
-    this.load.image("ground", "assets/sprites/platform.png");
+    this.load.image("ground", "assets/sprites/newPlatform.png");
     this.load.image("carrot", "assets/sprites/carrot1.png");
     this.load.audio("pop", "assets/sounds/pop.ogg");
     this.load.audio("goodJob", "assets/sounds/goodJob.mp3");
@@ -398,18 +398,52 @@ let scene5 = {
     sound1.stop();
     startTime = performance.now();
 
+    
+    // credits to jjcapellan: https://phaser.discourse.group/t/countdown-timer/2471/4
+    //console.log("create timer");
+    // 1:30 minute in seconds
+   
+    
+    this.initialTime = 90;
+   timedEvent = this.time.addEvent({
+      delay: 1000,
+      callback: onEvent,
+      callbackScope: this,
+      loop: true,
+      
+    });
+    
+    platforms = this.physics.add.staticGroup();
+  
+    platforms.create(300, 520, "ground");
+  
+    meadowThoughts = this.sound.add("meadowThoughts", {
+      loop: true,
+      volume: 0.2,
+    });
+    goodJob = this.sound.add("goodJob", {
+      loop: false,
+      volume: 0.7,
+    });
+    clock = this.sound.add("clock", { loop: false, volume: 0.7 });
+    completeTask = this.sound.add("completeTask", { loop: false, volume: 1 });
+    crunch = this.sound.add("crunch", { loop: false });
+    levelUp = this.sound.add("levelUp", { loop: false });
+    wrong = this.sound.add("wrong", { loop: false });
+  
+    this.add.image(0, 0, "meadow").setOrigin(0, 0);
     const soundOnButton2 = this.add
-      .image(70, 70, "soundOn")
+      .image(50, 70, "soundOn")
       .setInteractive({ useHandCursor: true });
     const soundOffButton2 = this.add
-      .image(70, 130, "soundOff")
+      .image(50, 130, "soundOff")
       .setInteractive({ useHandCursor: true });
 
       soundOnButton2.on("pointerup", playsound, this);
   
     soundOffButton2.on("pointerup", mutesound, this);
   
-    // credits to :https://labs.phaser.io/edit.html?src=src/scalemanager/full%20screen%20game.js&v=3.55.2
+    /* credits to :https://labs.phaser.io/edit.html?src=src/scalemanager/full%20screen%20game.js&v=3.55.2
     var button = this.add
       .image(800 - 16, 16, "fullscreen", 0)
       .setOrigin(1, 0)
@@ -429,41 +463,8 @@ let scene5 = {
         }
       },
       this
-    );
+    );*/
   
-    // credits to jjcapellan: https://phaser.discourse.group/t/countdown-timer/2471/4
-    //console.log("create timer");
-    // 1:30 minute in seconds
-   
-    
-    this.initialTime = 90;
-   timedEvent = this.time.addEvent({
-      delay: 1000,
-      callback: onEvent,
-      callbackScope: this,
-      loop: true,
-      
-    });
-    
-    platforms = this.physics.add.staticGroup();
-  
-    platforms.create(640, 560, "ground").setScale(3).refreshBody();
-  
-    meadowThoughts = this.sound.add("meadowThoughts", {
-      loop: true,
-      volume: 0.2,
-    });
-    goodJob = this.sound.add("goodJob", {
-      loop: false,
-      volume: 0.7,
-    });
-    clock = this.sound.add("clock", { loop: false, volume: 0.7 });
-    completeTask = this.sound.add("completeTask", { loop: false, volume: 1 });
-    crunch = this.sound.add("crunch", { loop: false });
-    levelUp = this.sound.add("levelUp", { loop: false });
-    wrong = this.sound.add("wrong", { loop: false });
-  
-    this.add.image(0, 0, "meadow").setOrigin(0, 0);
     // credits to :https://phaser.discourse.group/t/delete-an-item-in-a-group/7613/2
     const lifeHearts = this.add.group({
       key: "life",
@@ -508,7 +509,7 @@ let scene5 = {
   
     rabbitBig = this.physics.add.sprite(50, 250, "rabbitBig");
   
-    rabbitBig.setBounce(0.2);
+    //rabbitBig.setBounce(0.2);
     rabbitBig.setScale(0.7);
     rabbitBig.body.setCollideWorldBounds(true);
     /*this.anims.create({
@@ -580,35 +581,48 @@ let scene5 = {
   
      //console.log("new carrot", carrots.x, carrots.y);
     });
+
+    this.physics.add.collider(rabbitBig, platforms, rabbitHitPlatform, null, this);
+    this.physics.add.collider(rabbitBig, platforms, check_collision, null, this);
   
-    this.physics.add.collider(rabbitBig, platforms);
+    //this.physics.add.collider(rabbitBig, platforms);
   
     this.physics.add.collider(carrots, platforms);
   
-    const wordsLevel1 = ["of", "oh", "at", "ok", "go", "hi", "my", "up", "we" ];
+    const wordsLevel1 = ["of", "oh", "at", "ok", "go", "hi", "my", "up", "we", "do", "be", "by", "ah"];
     const wordsLevel2 = [
+      "dad", "far", "icy",
+      "lad",
+      "nap",
       "all",
       "has",
       "pop",
       "bee",
       "jam",
-      "bake",
+    
+    ];
+    const wordsLevel3 = ["bake",
       "word",
       "list",
+      "ease",
       "four",
-    ];
-    const wordsLevel3 = ["eagle", "evens", "extra", "enure", "enemy", "babel", "cabin", "facet", "kabob", "oasis", "rabbi"];
+      "earn", "fact", "kagu", "oars", "race", "safe", "safe", "uber", "udon", "vain", "zeal"]
+    const wordsLevel4 = ["aargh", "babka", "cabin", "early", "labor", "macaw", "saber", "eagle", "evens", "extra", "enure", "enemy", "babel", "cabin", "facet", "kabob", "oasis", "rabbi", ];
   
-    const wordsLevel4 = ["babies", "fabric", "habits", "nachos", "vacant", "yachts", "xenons", "abacus"];
-    const wordsLevel5 = ["abandon", "earache", "pacific", "rabbits", "cabbage", "habitat", "iceberg", "icecaps"];
-    const wordsLevel6 = ["aardvark", "eardrops", "habitant", "quackery", "habanero", "labelled", "macaroni", "macaroon", "yappiest"];
-    const wordsLevel7 = ["excellence", "magnifying", "obediently", "rabbinical", "tablecloth", "caballero", "obclavate", "quadratic", "tabbouleh", "zapateado" ];
-    const wordsLevel8 = ["abandonees", "daffodilly", "earthbound", "macadamias", "rabbitlike", "yardsticks", "zealotries" ];
+    const wordsLevel5 = [ "babble", "eaglet", "jabiru", "pacify", "xylan", "babies", "fabric", "habits", "nachos", "vacant", "yachts", "xenons", "abacus"];
+    const wordsLevel6 = ["abandon", "icefall", "labella", "macadam", "nacelle", "ulexite", "earache", "pacific", "rabbits", "cabbage", "habitat", "iceberg", "icecaps"];
+    const wordsLevel7 = ["aardvark", "fabulous", "eardrops", "habitant", "quackery", "habanero", "labelled", "macaroni", "macaroon", "yappiest", "naething", "oatmeals", "tabbying", "waddings", "yakitori", "zamarras"];
+    const wordsLevel8 = ["excellence", "magnifying", "obediently", "rabbinical", "tablecloth", "caballero", "obclavate", "quadratic", "tabbouleh", "zapateado", "dachshund", "dacquoise", "fabricant", "obbligato", "quadrants", "sablefish", "tablature", ];
+  
     // credits to Phaser: https://labs.phaser.io/edit.html?src=src%5Cgame%20objects%5Cdom%20element%5Cinput%20test.js
+    // credits to: https://ourcade.co/tools/phaser3-text-styler/
     var text = this.add.text(320, 510, "Please type: ", {
       color: "white",
       fontSize: "20px ",
       fontFamily: "Balsamiq Sans",
+      stroke: '#a579d4',
+			strokeThickness: 3,
+      resolution: 2
     });
   
     // Generate random array index
@@ -673,6 +687,7 @@ let scene5 = {
             rabbitBig.body.x += 77;
             rabbitBig.x += 77;
             rabbitBig.body.setVelocity(0, 48);
+
             counterWPM++;
             console.log(counterWPM);
           }
@@ -693,6 +708,7 @@ let scene5 = {
             rabbitBig.body.x += 77;
             rabbitBig.x += 77;
             rabbitBig.body.setVelocity(0, 48);
+            // rabbitBig.body.setVelocity(20,0);
             counterWPM++;
             console.log(counterWPM);
             totalCounterWPM = counterWPM;
@@ -712,6 +728,7 @@ let scene5 = {
             rabbitBig.body.x += 77;
             rabbitBig.x += 77;
             rabbitBig.body.setVelocity(0, 48);
+           // rabbitBig.body.setVelocity(20,0);
             counterWPM++;
             console.log(counterWPM);
             totalCounterWPM = counterWPM;
@@ -731,6 +748,7 @@ let scene5 = {
             rabbitBig.body.x += 77;
             rabbitBig.x += 77;
             rabbitBig.body.setVelocity(0, 48);
+            //rabbitBig.body.setVelocity(20,0);
             counterWPM++;
             console.log(counterWPM);
             totalCounterWPM = counterWPM;
@@ -750,6 +768,7 @@ let scene5 = {
             rabbitBig.body.x += 77;
             rabbitBig.x += 77;
             rabbitBig.body.setVelocity(0, 48);
+            //rabbitBig.body.setVelocity(20,0);
             counterWPM++;
             console.log(counterWPM);
             totalCounterWPM = counterWPM;
@@ -769,6 +788,7 @@ let scene5 = {
             rabbitBig.body.x += 77;
             rabbitBig.x += 77;
             rabbitBig.body.setVelocity(0, 48);
+            //rabbitBig.body.setVelocity(20,0);
             counterWPM++;
             console.log(counterWPM);
             totalCounterWPM = counterWPM;
@@ -786,9 +806,10 @@ let scene5 = {
   
             text.setText("Please type: " + newWord);
             //Move rabbit
-            rabbitBig.body.x += 77;
+           rabbitBig.body.x += 77;
             rabbitBig.x += 77;
             rabbitBig.body.setVelocity(0, 48);
+     
             counterWPM++;
             console.log(counterWPM);
             totalCounterWPM = counterWPM;
@@ -810,7 +831,8 @@ let scene5 = {
             //Move rabbit
             rabbitBig.body.x += 77;
             rabbitBig.x += 77;
-            rabbitBig.body.setVelocity(0, 48);
+            rabbitBig.body.setVelocity(48, 0);
+           // rabbitBig.body.setVelocity(20,0);
             counterWPM++;
             console.log(counterWPM);
             totalCounterWPM = counterWPM;
@@ -896,7 +918,8 @@ let scene5 = {
   
     carrots.disableBody(true, true);
     grow += 0.1;
-    rabbitBig.setScale(grow);
+    // credits to: https://phaser.discourse.group/t/solved-setsize-not-working-on-scaled-sprites/3714
+    rabbitBig.body.setSize(grow);
     crunch.play();
   
     /*if (carrots.countActive(true) === 0)
@@ -975,7 +998,7 @@ let scene5 = {
           ? Phaser.Math.Between(400, 800)
           : Phaser.Math.Between(0, 400);
       posx = 50;
-      posy = 50;
+       posy = 50;
       rabbitBig.setPosition(posx, posy);
     }
     if (score === 600) {
@@ -987,7 +1010,7 @@ let scene5 = {
           ? Phaser.Math.Between(400, 800)
           : Phaser.Math.Between(0, 400);
       posx = 50;
-      posy = 50;
+       posy = 50;
       rabbitBig.setPosition(posx, posy);
     }
     if (score === 700) {
@@ -1029,6 +1052,18 @@ let scene5 = {
         ? Phaser.Math.Between(400, 800)
         : Phaser.Math.Between(0, 400);
   }
+
+var candosomething = false;
+function rabbitHitPlatform() { console.log('bunny on platform'); 
+                             // credits to: https://phaser.discourse.group/t/how-to-check-collider-and-not-collider-between-two-objects/9273/2
+                             }
+
+function check_collision (rabbitBig, platforms)
+{
+    candosomething = true;
+}
+
+
   // credits to: https://phaser.discourse.group/t/countdown-timer/2471/4
   
   // credits to jjcapellan: https://phaser.discourse.group/t/countdown-timer/2471/4
@@ -1174,16 +1209,16 @@ let scene5 = {
     creditsButton.on("pointerup", backToMenu, this);
     creditsButton.on("pointerup", enterSoundNow, this);
    // credits to: https://phaser.discourse.group/t/auto-scrolling-text-issue-phaser-3/2984
-   creditText = `Credits:\n1) credits to Professor\n2) credits for meadow.jpg: https://opengameart.org/content/meadow-background\n3) credits to migfus20: https://opengameart.org/content/cute-intro-music\n4) credits for thatsItFortoday.mp3 - unable to find for now\n5) credits to: https://opengameart.org/content/mascot-bunny-character\n6) credits to: https://opengameart.org/content/mascot-bunny-character\n7) credits to: https://opengameart.org/content/dark-ground\n8) credits for: https://opengameart.org/content/7-eating-crunches\n9) credits to StumpyStrust for ui sounds (on/off): https://opengameart.org/content/ui-sounds\n10) credits to p0ss for Interface Sounds Starter Pack (appear-online.ogg): https://opengameart.org/content/interface-sounds-starter-pack\n11) credits to wobbleboxx for wrong.mp3 and levelUp.mp3: https://opengameart.org/content/level-up-power-up-coin-get-13-sounds\n12) credits to jalastram - Jesús Lastra - for enter.wav: https://opengameart.org/content/gui-sound-effects-4\n13) credits to full screen: https://raw.githubusercontent.com/photonstorm/phaser3-examples/master/public/assets/ui/fullscreen-white.png\n14) credits to clock.wav: https://opengameart.org/content/ticking-clock-0\n15) credits to completeTask.mp3: https://opengameart.org/content/completion-sound\n 16) Attribute Little Robot Sound Factory, and provide this link where possible: www.littlerobotsoundfactory.com 17) By Zeyu Ren 任泽宇 for clouds.png: https://opengameart.org/content/backgrounds-for-2d-platformers`
+   creditText = `Credits:\n1) credits to CS 42 Professor Ethan Wilde\n2) credits for meadow.jpg: https://opengameart.org/content/meadow-background\n3) credits to migfus20: https://opengameart.org/content/cute-intro-music\n4) credits for thatsItFortoday.mp3 - unable to find for now\n5) credits to: https://opengameart.org/content/mascot-bunny-character\n6) credits to: https://opengameart.org/content/mascot-bunny-character\n7) credits to: https://opengameart.org/content/dark-ground\n8) credits for: https://opengameart.org/content/7-eating-crunches\n9) credits to StumpyStrust for ui sounds (on/off): https://opengameart.org/content/ui-sounds\n10) credits to p0ss for Interface Sounds Starter Pack: https://opengameart.org/content/interface-sounds-starter-pack\n11) credits to wobbleboxx for wrong.mp3 and levelUp.mp3: https://opengameart.org/content/level-up-power-up-coin-get-13-sounds\n12) credits to jalastram - Jesús Lastra: https://opengameart.org/content/gui-sound-effects-4\n13) credits to full screen: https://raw.githubusercontent.com/photonstorm/phaser3-examples/master/public/assets/ui/fullscreen-white.png\n14) credits to clock.wav: https://opengameart.org/content/ticking-clock-0\n15) credits to completeTask.mp3: https://opengameart.org/content/completion-sound\n16) Little Robot Sound Factory - www.littlerobotsoundfactory.com\n17) By Zeyu Ren 任泽宇: https://opengameart.org/content/backgrounds-for-2d-platformers\n18) Thank you to everyone who helped from the CS 42 Class and the CS 42 TA Benjamin\n19) Thank you to my Madre\n20)`
    
     let arrayText = creditText.split('\n')
     let text = this.add.text(0, 0, '', {
       fontFamily: "Balsamiq Sans",
   
       color: "#fff",
-      fontSize: "14px",
+      fontSize: "17px",
       align: 'left',
-      padding: 50,
+      padding: 40,
       lineSpacing: 7,
 
       // credits :https://github.com/photonstorm/phaser3-examples/blob/e5ec94a68a9393082d797645d0e830e2f6112bf1/public/src/3.24/game%20objects/text/word%20wrap%20by%20width.js
@@ -1198,6 +1233,7 @@ let scene5 = {
             .setX(0)
             .setY(0 + i * 20)
             .setText(arrayText[i].trim())
+
         }
       })
     }
@@ -1259,7 +1295,7 @@ let scene5 = {
   
     soundOffButton2.on("pointerup", mutesound, this);
   
-    // credits to :https://labs.phaser.io/edit.html?src=src/scalemanager/full%20screen%20game.js&v=3.55.2
+    /* credits to :https://labs.phaser.io/edit.html?src=src/scalemanager/full%20screen%20game.js&v=3.55.2
     var button = this.add
       .image(800 - 16, 16, "fullscreen", 0)
       .setOrigin(1, 0)
@@ -1279,7 +1315,7 @@ let scene5 = {
         }
       },
       this
-    );
+    );*/
   
     // credits to jjcapellan: https://phaser.discourse.group/t/countdown-timer/2471/4
     //console.log("create timer");
@@ -1354,7 +1390,7 @@ let scene5 = {
   
     rabbitBig = this.physics.add.sprite(50, 250, "rabbitBig");
   
-    rabbitBig.setBounce(0.2);
+   // rabbitBig.setBounce(0.2);
     rabbitBig.setScale(0.7);
     rabbitBig.body.setCollideWorldBounds(true);
     /*this.anims.create({
@@ -1733,7 +1769,13 @@ let scene5 = {
     });*/
   }
   
-  function scene2Update() {}
+  function scene2Update() {
+   
+  /* if (candosomething) {
+    }*/
+    
+   // candosomething = false;
+  }
   
   function collectcarrot(rabbitBig, carrots) {
     // credits to: https://cs42-week17-10-kdkups.srjcethanwilde.repl.co/
@@ -1781,10 +1823,8 @@ let scene5 = {
       levelUp.play();
       welcomeText.setText("Level 2: passed");
   
-      var x =
-        rabbitBig.x < 400
-          ? Phaser.Math.Between(400, 800)
-          : Phaser.Math.Between(0, 400);
+     
+  
   
       posx = 50;
       posy = 50;
@@ -1802,10 +1842,7 @@ let scene5 = {
       levelUp.play();
       welcomeText.setText("Level 4: passed");
   
-      var x =
-        rabbitBig.x < 400
-          ? Phaser.Math.Between(400, 800)
-          : Phaser.Math.Between(0, 400);
+    
       posx = 50;
       posy = 50;
       rabbitBig.setPosition(posx, posy);
@@ -1814,10 +1851,7 @@ let scene5 = {
       levelUp.play();
       welcomeText.setText("Level 5: passed");
   
-      var x =
-        rabbitBig.x < 400
-          ? Phaser.Math.Between(400, 800)
-          : Phaser.Math.Between(0, 400);
+
       posx = 50;
       posy = 50;
       rabbitBig.setPosition(posx, posy);
@@ -1826,10 +1860,7 @@ let scene5 = {
       levelUp.play();
       welcomeText.setText("Level 6: passed");
   
-      var x =
-        rabbitBig.x < 400
-          ? Phaser.Math.Between(400, 800)
-          : Phaser.Math.Between(0, 400);
+     
       posx = 50;
       posy = 50;
       rabbitBig.setPosition(posx, posy);
